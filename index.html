@@ -785,6 +785,12 @@ for (var _i = 0; _i < heroSlides.length; _i++) {
   })(_i);
 }
 
+// Recalc member carousel on resize
+  window.addEventListener('resize', function() {
+    var track = document.getElementById('membersTrack');
+    if (track) { track._init = false; memberCarousel(0); }
+  });
+
 // Auto-advance
 setInterval(function() { heroGo(heroCur + 1); }, 5000);
 
@@ -810,9 +816,18 @@ function memberCarousel(dir) {
   var containerW = container.offsetWidth;
   if (!containerW || containerW === 0) containerW = window.innerWidth - 48;
 
-  // Each card is calc(33.333% - 11px), gap is 16px
-  var cardW = (containerW - 32) / 3;
-  var stepW = cardW + 16;
+  // Responsive columns matching CSS breakpoints
+  var cols = window.innerWidth <= 480 ? 1 : window.innerWidth <= 768 ? 2 : 3;
+  var gap = 16;
+  var cardW = (containerW - gap * (cols - 1)) / cols;
+  var stepW = cardW + gap;
+
+  // Update card widths in DOM to match current cols
+  var allCards = track.children;
+  for (var ci = 0; ci < allCards.length; ci++) {
+    allCards[ci].style.flex = '0 0 ' + cardW + 'px';
+    allCards[ci].style.minWidth = cardW + 'px';
+  }
 
   function moveTo(p, animate) {
     track.style.transition = animate ? 'transform 0.28s cubic-bezier(.4,0,.2,1)' : 'none';
@@ -910,6 +925,12 @@ function buildNewsCard(item) {
   var imgHtml = buildImgCarousel(item.imgs || [], item.title);
   var displayText = item.shortText || item.text || '';
   var newsUrl = 'neuigkeiten.html' + (item.code ? '#' + item.code : '');
+  card.style.cursor = 'pointer';
+  card.onclick = function(e) {
+    if (!e.target.closest('a')) {
+      window.location.href = newsUrl;
+    }
+  };
   card.innerHTML = imgHtml +
     '<div class="news-card-body">' +
     '<div class="news-card-date">' + item.date + '</div>' +
