@@ -109,7 +109,7 @@
     }
     .news-featured-expand {
       display: inline-flex; align-items: center; gap: 5px;
-      margin-top: 10px; background: none; border: none;
+      margin-right: 16px; margin-top: 10px; background: none; border: none;
       color: var(--rot); font-size: 0.85rem; font-weight: 600;
       cursor: pointer; padding: 0; font-family: 'Inter', sans-serif;
       transition: gap 0.15s;
@@ -509,7 +509,7 @@
       (safeShort ? '<div class="news-lead">' + safeShort + '</div>' : '') +
       (safeText  ? '<div class="news-body" id="featBody">' + safeText + '</div>' : '') +
       (safeText ? '<button class="news-featured-expand" id="featExpandBtn" onclick="toggleFeatured(event)">Mehr lesen &#8595;</button>' : '') +
-      '<button class="news-open-btn" onclick="openArticleModal(event, this)">  Artikel lesen &#8594;</button>' +
+      '<button class="news-open-btn" onclick="openArticleModal(event, this)">Artikel lesen &#8594;</button>' +
       '</div>';
     el.setAttribute('data-code', item.code||'');
     el.setAttribute('data-date', item.date||'');
