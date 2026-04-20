@@ -44,6 +44,7 @@
       --text: #1a1a1a; --text-leicht: #555;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { overflow-x: hidden; }
     body { font-family: 'Inter', sans-serif; color: var(--text); background: var(--weiss); overflow-x: hidden; }
     h1,h2,h3,h4 { font-family: 'Montserrat', sans-serif; }
 
@@ -109,7 +110,7 @@
     }
     .news-featured-expand {
       display: inline-flex; align-items: center; gap: 5px;
-      margin-right: 16px; margin-top: 10px; background: none; border: none;
+      margin-right: 10px; margin-top: 10px; background: none; border: none;
       color: var(--rot); font-size: 0.85rem; font-weight: 600;
       cursor: pointer; padding: 0; font-family: 'Inter', sans-serif;
       transition: gap 0.15s;
@@ -186,14 +187,14 @@
       display: none; position: fixed; inset: 0;
       background: rgba(0,0,0,0.55); z-index: 500;
       align-items: center; justify-content: center;
-      padding: 20px;
+      padding: 20px; box-sizing: border-box; overflow: hidden;
     }
     .article-modal.open { display: flex; }
     .article-modal-inner {
       background: var(--weiss); border-radius: 12px;
       max-width: 680px; width: 100%; max-height: 88vh;
       overflow-y: auto; padding: 36px 40px;
-      position: relative;
+      position: relative; box-sizing: border-box;
     }
     .article-modal-close {
       position: absolute; top: 16px; right: 20px;
@@ -233,28 +234,32 @@
     /* IMAGE LIGHTBOX */
     .img-lightbox {
       display: none; position: fixed; inset: 0;
+      width: 100%; height: 100%;
       background: rgba(0,0,0,0.92); z-index: 600;
       align-items: center; justify-content: center;
+      overflow: hidden;
     }
     .img-lightbox.open { display: flex; }
     .img-lightbox img {
-      max-width: 90vw; max-height: 88vh;
-      object-fit: contain; border-radius: 4px;
+      max-width: min(90vw, calc(100vw - 80px)); max-height: 88vh;
+      object-fit: contain; border-radius: 4px; display: block;
     }
     .lightbox-close {
       position: fixed; top: 18px; right: 24px;
       background: none; border: none; color: white;
       font-size: 2rem; cursor: pointer; opacity: 0.8; line-height: 1;
+      z-index: 601;
     }
     .lightbox-close:hover { opacity: 1; }
     .lightbox-nav {
       position: fixed; top: 50%; transform: translateY(-50%);
       background: none; border: none; color: white;
       font-size: 3rem; cursor: pointer; opacity: 0.7; padding: 12px;
+      z-index: 601; touch-action: manipulation;
     }
     .lightbox-nav:hover { opacity: 1; }
-    .lightbox-prev { left: 8px; }
-    .lightbox-next { right: 8px; }
+    .lightbox-prev { left: 0; }
+    .lightbox-next { right: 0; }
 
     @media (max-width: 600px) {
       .article-modal-inner { padding: 24px 20px; }
@@ -265,6 +270,7 @@
       .article-modal-body p { font-size: 0.88rem; line-height: 1.68; }
       .ft-h4 { font-size: 0.92rem; }
       .ft-list li { font-size: 0.88rem; }
+      .article-modal { padding: 12px; }
     }
     /* LOADING STATE */
     .news-lead {
@@ -293,7 +299,7 @@
     @media (max-width: 768px) {
       header { padding: 12px 18px; }
       .logo-area img { height: 44px; }
-      nav { display: none; flex-direction: column; gap: 0; position: absolute; top: 100%; left: 0; right: 0; background: var(--weiss); border-top: 1px solid var(--grau-mittel); box-shadow: 0 8px 20px rgba(0,0,0,0.1); padding: 14px 0; }
+      nav { display: none; flex-direction: column; gap: 0; position: fixed; top: 0; left: 0; right: 0; width: 100%; background: var(--weiss); border-top: 1px solid var(--grau-mittel); box-shadow: 0 8px 20px rgba(0,0,0,0.1); padding: 14px 0; z-index: 99; margin-top: 75px; }
       nav.open { display: flex; }
       nav a { padding: 11px 22px; border-bottom: 1px solid var(--grau-mittel); }
       .nav-cta { margin: 10px 22px 4px !important; width: calc(100% - 44px); text-align: center; }
@@ -302,6 +308,9 @@
       main { padding: 0 16px 60px; }
       .news-item.has-img { grid-template-columns: 120px 1fr; gap: 14px; }
       footer { padding: 22px 18px; flex-direction: column; align-items: flex-start; }
+      .img-lightbox img { max-width: calc(100vw - 80px); max-height: 85vh; }
+      .lightbox-close { top: 12px; right: 16px; font-size: 1.8rem; }
+      .lightbox-nav { font-size: 2.2rem; padding: 8px; }
     }
 
     /* FORMAT TEXT ELEMENTE */

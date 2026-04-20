@@ -44,11 +44,12 @@
       --text: #1a1a1a; --text-leicht: #555;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { overflow-x: hidden; }
     body { font-family: 'Inter', sans-serif; color: var(--text); background: var(--weiss); overflow-x: hidden; }
     h1,h2,h3,h4 { font-family: 'Montserrat', sans-serif; }
 
     /* HEADER */
-    header { background: var(--weiss); border-bottom: 3px solid var(--rot); padding: 14px 40px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 12px rgba(0,0,0,0.07); }
+    header { background: var(--weiss); border-bottom: 3px solid var(--rot); padding: 14px 40px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 12px rgba(0,0,0,0.07); max-width: 100%; }
     .logo-area { display: flex; align-items: center; gap: 14px; text-decoration: none; }
     .past-event-body a, .info-banner a { color: var(--rot); font-weight: 600; }
     .logo-area img { height: 56px; width: auto; }
@@ -118,15 +119,15 @@
     .gallery-loading { padding: 24px; text-align: center; color: var(--text-leicht); font-size: 0.9rem; }
 
     /* LIGHTBOX */
-    .lightbox { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.9); z-index: 1000; align-items: center; justify-content: center; }
+    .lightbox { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; width: 100%; background: rgba(0,0,0,0.9); z-index: 1000; align-items: center; justify-content: center; overflow: hidden; }
     .lightbox.open { display: flex; }
-    .lightbox img { max-width: 90vw; max-height: 90vh; object-fit: contain; border-radius: 4px; }
-    .lightbox-close { position: fixed; top: 20px; right: 28px; color: white; font-size: 2rem; cursor: pointer; line-height: 1; opacity: 0.8; }
+    .lightbox img { max-width: min(90vw, calc(100vw - 80px)); max-height: 90vh; object-fit: contain; border-radius: 4px; display: block; }
+    .lightbox-close { position: fixed; top: 20px; right: 28px; color: white; font-size: 2rem; cursor: pointer; line-height: 1; opacity: 0.8; z-index: 1001; }
     .lightbox-close:hover { opacity: 1; }
-    .lightbox-nav { position: fixed; top: 50%; transform: translateY(-50%); color: white; font-size: 2.5rem; cursor: pointer; opacity: 0.7; padding: 12px; }
+    .lightbox-nav { position: fixed; top: 50%; transform: translateY(-50%); color: white; font-size: 2.5rem; cursor: pointer; opacity: 0.7; padding: 12px; z-index: 1001; touch-action: manipulation; }
     .lightbox-nav:hover { opacity: 1; }
-    .lightbox-prev { left: 12px; }
-    .lightbox-next { right: 12px; }
+    .lightbox-prev { left: 0; }
+    .lightbox-next { right: 0; }
 
     /* FOOTER */
     footer { background: var(--text); color: rgba(255,255,255,0.65); padding: 28px 40px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
@@ -141,7 +142,7 @@
     @media (max-width: 768px) {
       header { padding: 12px 18px; }
       .logo-area img { height: 44px; }
-      nav { display: none; flex-direction: column; gap: 0; position: absolute; top: 100%; left: 0; right: 0; background: var(--weiss); border-top: 1px solid var(--grau-mittel); box-shadow: 0 8px 20px rgba(0,0,0,0.1); padding: 14px 0; }
+      nav { display: none; flex-direction: column; gap: 0; position: fixed; top: 0; left: 0; right: 0; width: 100%; background: var(--weiss); border-top: 1px solid var(--grau-mittel); box-shadow: 0 8px 20px rgba(0,0,0,0.1); padding: 14px 0; z-index: 99; margin-top: 75px; }
       nav.open { display: flex; }
       nav a { padding: 11px 22px; border-bottom: 1px solid var(--grau-mittel); }
       .nav-cta { margin: 10px 22px 4px; width: calc(100% - 44px); justify-content: center; text-align: center; }
@@ -149,6 +150,9 @@
       .hero { padding: 36px 20px 32px; }
       main { padding: 0 16px 60px; }
       footer { padding: 22px 18px; flex-direction: column; align-items: flex-start; }
+      .lightbox img { max-width: calc(100vw - 80px); max-height: 85vh; }
+      .lightbox-close { top: 12px; right: 16px; font-size: 1.8rem; }
+      .lightbox-nav { font-size: 2rem; padding: 8px; }
     }
   </style>
 </head>
@@ -252,6 +256,7 @@
           <div style="background: var(--rot-hell); border-radius: 6px; padding: 10px 14px; font-size: 0.82rem; color: var(--text-leicht); line-height: 1.55;">
             Dieser Strategieworkshop ist ausschließlich für Mitglieder. Bitte meldet Euch über den Link an. Weitere Informationen folgen per E-Mail.
           </div>
+          
           <a href="https://calendar.google.com/calendar/event?action=TEMPLATE&tmeid=MGxlNG84YTMzaDgyaHIzZGlibzQ0aGE5cGsgdm9yc3RhbmRAaGVhbHRobmV0d29ya2hhbWJ1cmcuZGU&tmsrc=vorstand%40healthnetworkhamburg.de" target="_blank"
             style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: var(--rot); color: white; text-decoration: none; padding: 11px 20px; border-radius: 6px; font-size: 0.88rem; font-weight: 600; font-family: Inter, sans-serif; transition: background 0.2s; margin-top: auto;"
             onmouseover="this.style.background='var(--rot-dunkel)'" onmouseout="this.style.background='var(--rot)'">
