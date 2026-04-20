@@ -85,6 +85,7 @@
       margin-bottom: 32px;
     }
     .news-featured:hover { border-color: var(--rot); transform: translateY(-2px); }
+    .news-featured .news-featured-body { cursor: pointer; }
     .news-featured .news-img {
       width: 100%; aspect-ratio: 16/7; object-fit: cover; display: block;
     }
@@ -95,6 +96,25 @@
       position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
     }
     .news-featured-body { padding: 28px 28px 24px; }
+    .news-featured-body .news-body {
+      max-height: 220px; overflow: hidden;
+      position: relative; transition: max-height 0.4s ease;
+    }
+    .news-featured-body .news-body.expanded { max-height: 9999px; }
+    .news-featured-body .news-body:not(.expanded)::after {
+      content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+      height: 60px;
+      background: linear-gradient(transparent, var(--weiss));
+      pointer-events: none;
+    }
+    .news-featured-expand {
+      display: inline-flex; align-items: center; gap: 5px;
+      margin-top: 10px; background: none; border: none;
+      color: var(--rot); font-size: 0.85rem; font-weight: 600;
+      cursor: pointer; padding: 0; font-family: 'Inter', sans-serif;
+      transition: gap 0.15s;
+    }
+    .news-featured-expand:hover { gap: 9px; }
     .news-featured-body .news-date { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--rot); margin-bottom: 8px; }
     .news-featured-body h3 { font-size: 1.45rem; font-weight: 700; letter-spacing: -0.01em; line-height: 1.25; margin-bottom: 12px; }
     .news-featured-body p { font-size: 0.97rem; color: var(--text-leicht); line-height: 1.75; }
@@ -239,6 +259,12 @@
     @media (max-width: 600px) {
       .article-modal-inner { padding: 24px 20px; }
       .article-modal-title { font-size: 1.2rem; }
+      .news-featured-body { padding: 20px 18px 18px; }
+      .news-featured-body h3 { font-size: 1.2rem; }
+      .news-featured-body .news-body p { font-size: 0.9rem; line-height: 1.65; }
+      .article-modal-body p { font-size: 0.88rem; line-height: 1.68; }
+      .ft-h4 { font-size: 0.92rem; }
+      .ft-list li { font-size: 0.88rem; }
     }
     /* LOADING STATE */
     .news-lead {
@@ -277,6 +303,34 @@
       .news-item.has-img { grid-template-columns: 120px 1fr; gap: 14px; }
       footer { padding: 22px 18px; flex-direction: column; align-items: flex-start; }
     }
+
+    /* FORMAT TEXT ELEMENTE */
+    .ft-h4 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1rem; font-weight: 700;
+      color: var(--text); margin: 18px 0 6px;
+      letter-spacing: -0.01em; line-height: 1.3;
+    }
+    .ft-list {
+      margin: 8px 0 14px 0; padding-left: 20px;
+      list-style: disc;
+    }
+    .ft-list li {
+      font-size: 0.95rem; color: var(--text-leicht);
+      line-height: 1.7; margin-bottom: 5px;
+    }
+    .ft-spacer { height: 0.8em; }
+    /* Besseres Absatz-Spacing */
+    .article-modal-body p,
+    .article-modal-lead p,
+    .news-featured-body .news-body p,
+    .news-featured-body .news-lead p {
+      margin-bottom: 12px;
+    }
+    .article-modal-body p:last-child,
+    .article-modal-lead p:last-child { margin-bottom: 0; }
+
+    /* MOBILE ANPASSUNGEN */
   </style>
 </head>
 <body>
@@ -357,22 +411,66 @@
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;');
-    // Convert URLs to clickable links
+    // URLs → klickbare Links
     safe = safe.replace(/(https?:\/\/[^\s<]+)/g, function(url) {
       return '<a href="' + url + '" target="_blank" rel="noopener" style="color:var(--rot);text-decoration:underline;">' + url + '</a>';
     });
-    // Normalize line endings: \r\n → \n
+    // Normalize line endings
     safe = safe.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
-    // Leerzeilen (eine oder mehrere Leerzeilen = neue Paragraph)
-    // Eine Leerzeile = Zeile die nur Leerzeichen enthält
-    safe = safe.replace(/\n[ \t]*\n+/g, '\n\n');
-    // Split into paragraphs on double newline
+
+    // Doppelte Leerzeilen erhalten (zwei \n\n = Absatzabstand + extra Leerzeile)
+    // Markiere mehrfache Leerzeilen mit Platzhalter
+    safe = safe.replace(/\n\n\n+/g, '\n\n EXTRA \n\n');
+    // Einfache Leerzeilen normalisieren
+    safe = safe.replace(/\n[ \t]*\n/g, '\n\n');
+
+    // Zeilen splitten und verarbeiten
     var paragraphs = safe.split('\n\n');
-    var html = paragraphs.map(function(para) {
-      // Within each paragraph, single newlines become <br>
-      return '<p>' + para.replace(/\n/g, '<br>') + '</p>';
+    var html = paragraphs.map(function(block) {
+      // Extra-Leerzeile Platzhalter
+      if (block === ' EXTRA ') return '<div class="ft-spacer"></div>';
+
+      var lines = block.split('\n');
+      // Prüfe ob Block eine Liste ist (alle Zeilen mit - oder •)
+      var listLines = lines.filter(function(l) { return /^[-•]\s/.test(l.trim()); });
+      if (listLines.length > 0 && listLines.length === lines.length) {
+        var items = lines.map(function(l) {
+          return '<li>' + applyInline(l.trim().replace(/^[-•]\s+/, '')) + '</li>';
+        }).join('');
+        return '<ul class="ft-list">' + items + '</ul>';
+      }
+      // Gemischter Block: Zeilen einzeln prüfen
+      var result = lines.map(function(line) {
+        var t = line.trim();
+        if (/^##\s+/.test(t)) {
+          return '<h4 class="ft-h4">' + applyInline(t.replace(/^##\s+/, '')) + '</h4>';
+        }
+        if (/^[-•]\s/.test(t)) {
+          return '<ul class="ft-list"><li>' + applyInline(t.replace(/^[-•]\s+/, '')) + '</li></ul>';
+        }
+        return t;
+      });
+      // Zusammenhängende Text-Zeilen zu Absatz verbinden
+      var out = [];
+      var textBuf = [];
+      result.forEach(function(r) {
+        if (r.startsWith('<h4') || r.startsWith('<ul')) {
+          if (textBuf.length) { out.push('<p>' + applyInline(textBuf.join('<br>')) + '</p>'); textBuf = []; }
+          out.push(r);
+        } else {
+          textBuf.push(r);
+        }
+      });
+      if (textBuf.length) out.push('<p>' + applyInline(textBuf.join('<br>')) + '</p>');
+      return out.join('');
     }).join('');
     return html;
+  }
+
+  function applyInline(s) {
+    // Fettschrift: *text* → <strong>
+    s = s.replace(/\*([^*]+)\*/g, '<strong>$1</strong>');
+    return s;
   }
 
   // ── FEATURED NEWS (latest, big) ──
@@ -409,7 +507,8 @@
       '<div class="news-date">' + item.date + '</div>' +
       '<h3>' + item.title + '</h3>' +
       (safeShort ? '<div class="news-lead">' + safeShort + '</div>' : '') +
-      (safeText  ? '<div class="news-body">' + safeText + '</div>' : '') +
+      (safeText  ? '<div class="news-body" id="featBody">' + safeText + '</div>' : '') +
+      (safeText ? '<button class="news-featured-expand" id="featExpandBtn" onclick="toggleFeatured(event)">Mehr lesen &#8595;</button>' : '') +
       '<button class="news-open-btn" onclick="openArticleModal(event, this)">Artikel lesen &#8594;</button>' +
       '</div>';
     el.setAttribute('data-code', item.code||'');
@@ -571,12 +670,17 @@
     setTimeout(function() {
       var el = document.getElementById(hash.slice(1));
       if (!el) return;
+      function scrollToEl() {
+        var headerH = document.querySelector('header') ? document.querySelector('header').offsetHeight : 80;
+        var top = el.getBoundingClientRect().top + window.pageYOffset - headerH - 16;
+        window.scrollTo({ top: top, behavior: 'smooth' });
+      }
       var olderBody = document.getElementById('olderBody');
       if (olderBody && olderBody.contains(el) && !olderBody.classList.contains('open')) {
         toggleOlder();
-        setTimeout(function() { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 320);
+        setTimeout(scrollToEl, 320);
       } else {
-        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        scrollToEl();
       }
     }, 200);
   }
@@ -640,6 +744,21 @@ fetch('https://docs.google.com/spreadsheets/d/1inAiEvDK3ORJUCkBkaTZVbK8PWJ7U8gIl
     }
   })
   .catch(function() { renderAllNews([]); });
+
+
+  function toggleFeatured(e) {
+    e.stopPropagation();
+    var body = document.getElementById('featBody');
+    var btn  = document.getElementById('featExpandBtn');
+    if (!body) return;
+    if (body.classList.contains('expanded')) {
+      body.classList.remove('expanded');
+      btn.innerHTML = 'Mehr lesen &#8595;';
+    } else {
+      body.classList.add('expanded');
+      btn.innerHTML = 'Weniger anzeigen &#8593;';
+    }
+  }
 
   // ── ARTICLE MODAL ──
   var lbImgs = [], lbCur = 0;
