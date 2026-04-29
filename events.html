@@ -91,7 +91,7 @@
     .event-title-area h3 { font-size: 1.1rem; font-weight: 700; }
     .event-card-body { padding: 0; }
     .event-embed { line-height: 0; }
-    .event-embed iframe { width: 100%; height: 420px; border: none; display: block; }
+    .event-embed iframe { width: 100%; height: 520px; border: none; display: block; }
 
     /* PAST EVENTS */
     .past-event { background: var(--weiss); border: 1px solid var(--grau-mittel); border-radius: 12px; overflow: hidden; margin-bottom: 28px; }
@@ -152,7 +152,7 @@
     .footer-li svg { width: 20px; height: 20px; fill: #0A66C2; display: block; }
 
     @media (max-width: 900px) { .events-grid { grid-template-columns: 1fr 1fr; } }
-    @media (max-width: 600px) { .events-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 600px) { .events-grid { grid-template-columns: 1fr; } .event-embed iframe { height: 560px; } /* etwas mehr Puffer für schmale Screens */ }
     @media (max-width: 768px) {
       header { padding: 12px 18px; }
       .logo-area img { height: 44px; }
@@ -242,7 +242,8 @@
     </div>
   </div>
 
-<!-- Strategieworkshop Cirlce Leads #HNHH-->
+  <!--
+ Strategieworkshop Cirlce Leads #HNHH
     <div class="event-card" style="margin-top: 20px;">
       <div class="event-card-header">
         <div class="event-number">15</div>
@@ -280,13 +281,42 @@
         </div>
       </div>
     </div>
+  -->
   </div>
+
 
   <!-- VERGANGENE EVENTS -->
   <div class="section-header">
     <h2>Vergangene Events</h2>
     <div class="section-line"></div>
     <span class="section-badge">Rückblick</span>
+  </div>
+
+ <!-- Strategieworkshop 2 -->
+  <div class="past-event" id="pe-strategie2">
+    <div class="past-event-header" onclick="togglePast('strategie2')">
+      <div class="past-event-number">WS2</div>
+      <div class="past-event-info">
+        <div class="past-event-label">Workshop</div>
+        <div class="past-event-title">Strategie-Workshop II</div>
+        <div class="past-event-date">April 2026</div>
+      </div>
+      <div class="past-event-toggle" id="toggle-strategie2">▾</div>
+    </div>
+    <div class="past-event-body" id="body-strategie2">
+      <p style="font-size:0.95rem;color:var(--text-leicht);line-height:1.7;margin-bottom:20px;">
+        60 Mitglieder stellen hybrid die Circles für das Health Network Hamburg auf die Füße - Purpose, Rollen und Verantwortlichkeiten sind definiert!
+      </p>
+      <div style="margin-top:8px;">
+        <h4 style="font-size:0.88rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-leicht);margin-bottom:12px;">Impressionen</h4>
+        <div class="gallery-grid" id="gallery-strategie2">
+          <div class="gallery-loading">Bilder werden geladen…</div>
+        </div>
+        <p style="font-size:0.95rem;color:var(--text-leicht);line-height:1.7;margin-bottom:20px;">
+        Fotos: <a href="https://healthnetworkhamburg.de/" target="_blank">Health Network Hamburg e.V.</a>
+      </p>
+      </div>
+    </div>
   </div>
 
   <!-- Strategieworkshop -->
@@ -485,6 +515,29 @@
     "/images/strategieworkshop-1/netzwerk-10.jpg",
     "/images/strategieworkshop-1/netzwerk-11.jpg",
     "/images/strategieworkshop-1/netzwerk-12.jpg"
+  ],
+
+  strategie2: [
+    "/images/strategieworkshop-2/strategie2-1.png",
+    "/images/strategieworkshop-2/strategie2-2.JPG",
+    "/images/strategieworkshop-2/strategie2-3.JPG",
+    "/images/strategieworkshop-2/strategie2-4.JPG",
+    "/images/strategieworkshop-2/strategie2-5.JPG",
+    "/images/strategieworkshop-2/strategie2-6.JPG",
+    "/images/strategieworkshop-2/strategie2-7.png",
+    "/images/strategieworkshop-2/strategie2-8.JPG",
+    "/images/strategieworkshop-2/strategie2-9.png",
+    "/images/strategieworkshop-2/strategie2-10.JPG",
+    "/images/strategieworkshop-2/strategie2-11.JPG",
+    "/images/strategieworkshop-2/strategie2-12.JPG",
+    "/images/strategieworkshop-2/strategie2-13.JPG",
+    "/images/strategieworkshop-2/strategie2-14.png",
+    "/images/strategieworkshop-2/strategie2-15.JPG",
+    "/images/strategieworkshop-2/strategie2-16.png",
+    "/images/strategieworkshop-2/strategie2-17.JPG",
+    "/images/strategieworkshop-2/strategie2-18.png",
+    "/images/strategieworkshop-2/strategie2-19.png",
+    "/images/strategieworkshop-2/strategie2-20.png"
   ],
 
   workshop: [
