@@ -5,12 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Apéro No. 13 – Ich war dabei! | Health Network Hamburg e.V.</title>
   <meta name="robots" content="noindex, nofollow">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <link rel="icon" href="/hnhh_favicon.ico" sizes="any">
-  <link rel="icon" type="image/svg+xml" href="/hnhh_favicon.svg">
-  <link rel="apple-touch-icon" href="favicon.svg">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
@@ -531,7 +525,7 @@
   <div class="hamburger" id="hamburger" onclick="toggleNav()"><span></span><span></span><span></span></div>
   <nav id="main-nav">
     <a href="index.html">Home</a>
-    <a href="events.html">Events</a>
+    <a href="events.html" class="active">Events</a>
     <a href="neuigkeiten.html">News</a>
     <a href="mitglied-werden.html" class="nav-cta">Mitglied werden</a>
   </nav>
@@ -860,8 +854,16 @@
     btn.disabled = true;
 
     try {
+      // Target output: 2600px wide regardless of device
+      // On mobile, canvas.offsetWidth is smaller (e.g. 340px) → scale needs to be higher
+      // On desktop, canvas.offsetWidth is larger (e.g. 520px) → scale is lower
+      // Both result in the same pixel output (~2600px)
+      const targetPx = 2600;
+      const canvasWidth = canvas.offsetWidth;
+      const scale = Math.ceil(targetPx / canvasWidth);
+
       const c = await html2canvas(canvas, {
-        scale: 5,
+        scale: scale,
         useCORS: false,
         allowTaint: true,
         backgroundColor: '#1a1a1a',
